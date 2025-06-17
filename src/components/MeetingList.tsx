@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Calendar, Clock, MapPin, Users, MoreVertical, Play, FileText, Edit, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export const MeetingList = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('upcoming');
   
   const upcomingMeetings = [
@@ -78,12 +79,15 @@ export const MeetingList = () => {
     }
   ];
 
-  const handleStartMeeting = (meetingTitle: string) => {
+  const handleStartMeeting = (meetingId: number, meetingTitle: string) => {
     toast({
       title: "Starting Meeting",
       description: `"${meetingTitle}" session is beginning. Redirecting to meeting recorder...`,
     });
-    // Here you would navigate to the meeting recorder
+    // Navigate to the meeting recorder page
+    setTimeout(() => {
+      navigate(`/meeting/${meetingId}/record`);
+    }, 1000);
   };
 
   const handleEditMeeting = (meetingTitle: string) => {
@@ -181,7 +185,7 @@ export const MeetingList = () => {
                 <Button 
                   size="sm" 
                   className="bg-green-600 hover:bg-green-700 text-white"
-                  onClick={() => handleStartMeeting(meeting.title)}
+                  onClick={() => handleStartMeeting(meeting.id, meeting.title)}
                 >
                   <Play className="w-4 h-4 mr-1" />
                   Start
